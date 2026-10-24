@@ -1,0 +1,27 @@
+# Optional benchmark profile. Keep profiles/vavilov/config.yaml unchanged.
+# Measurements: 2026-10-22 real WGS/lpWGS three-sample test on vavilov1.
+executor: slurm
+jobs: 8
+cores: 24
+# Aggregate controller-side memory budget across all submitted jobs.
+resources:
+  mem_mb: 96000
+set-resource-scopes:
+  mem_mb: global
+slurm-status-command: sacct
+slurm-status-attempts: 10
+slurm-pass-command-as-script: true
+latency-wait: 120
+rerun-incomplete: true
+printshellcmds: false
+show-failed-logs: true
+software-deployment-method:
+  - apptainer
+default-resources:
+  mem_mb: 4000
+  runtime: 120
+  slurm_partition: main
+  slurm_account: users
+  slurm_extra: --nodelist=vavilov1
+# IMPORTANT: /mnt/databases does not exist on compute node vavilov1.
+apptainer-args: --cleanenv --bind /mnt/hot:/mnt/hot,/nfs/home:/nfs/home

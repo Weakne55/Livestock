@@ -1,0 +1,100 @@
+# EXAMPLE ONLY. Copy this file to config/<RUN_ID>.yaml and edit all paths.
+# Built-in species and contig lists are examples for the specified assembly accessions.
+samples: config/samples.tsv
+metadata: config/metadata.tsv
+container_image: containers/livestock-0.3.sif
+workdir: /absolute/path/to/work/run001
+results_dir: /absolute/path/to/persistent/results/run001
+reference_cache_dir: /absolute/path/to/persistent/reference_cache
+aligner: bwa-mem2
+keep_trimmed_fastq: false
+keep_lane_bam: false
+references:
+  Ovis_aries:
+    assembly: GCF_016772045.1
+    fasta: /absolute/path/to/references/Ovis_aries.fa
+    contigs:
+    - NC_056054.1
+    - NC_056055.1
+    - NC_056056.1
+    - NC_056057.1
+    - NC_056058.1
+    - NC_056059.1
+    - NC_056060.1
+    - NC_056061.1
+    - NC_056062.1
+    - NC_056063.1
+    - NC_056064.1
+    - NC_056065.1
+    - NC_056066.1
+    - NC_056067.1
+    - NC_056068.1
+    - NC_056069.1
+    - NC_056070.1
+    - NC_056071.1
+    - NC_056072.1
+    - NC_056073.1
+    - NC_056074.1
+    - NC_056075.1
+    - NC_056076.1
+    - NC_056077.1
+    - NC_056078.1
+    - NC_056079.1
+  Bos_taurus:
+    assembly: GCF_002263795.1
+    fasta: /absolute/path/to/references/Bos_taurus.fa
+    contigs:
+    - NC_037328.1
+    - NC_037329.1
+    - NC_037330.1
+    - NC_037331.1
+    - NC_037332.1
+    - NC_037333.1
+    - NC_037334.1
+    - NC_037335.1
+    - NC_037336.1
+    - NC_037337.1
+    - NC_037338.1
+    - NC_037339.1
+    - NC_037340.1
+    - NC_037341.1
+    - NC_037342.1
+    - NC_037343.1
+    - NC_037344.1
+    - NC_037345.1
+    - NC_037346.1
+    - NC_037347.1
+    - NC_037348.1
+    - NC_037349.1
+    - NC_037350.1
+    - NC_037351.1
+    - NC_037352.1
+    - NC_037353.1
+    - NC_037354.1
+    - NC_037355.1
+    - NC_037356.1
+variant_calling:
+  min_mapq: 20
+  min_baseq: 20
+  max_depth_per_bam: 10000
+  highcov_min_qual: 30
+resource_limits:
+  align_mem_mb_mem2: 56000
+  align_mem_mb_bwa: 24000
+  align_highcov_runtime: 1440
+  align_lowpass_runtime: 360
+  mem2_index_mem_mb: 60000
+  mem2_index_runtime: 720
+  canonical_mem_mb: 24000
+  canonical_highcov_runtime: 1440
+  canonical_lowpass_runtime: 360
+  bam_qc_mem_mb: 12000
+  bam_qc_highcov_runtime: 720
+  bam_qc_lowpass_runtime: 360
+  fastp_mem_mb: 32000
+  fastp_highcov_runtime: 240
+  fastp_lowpass_runtime: 120
+  call_highcov_mem_mb: 16000
+  call_highcov_runtime: 900
+  call_lowpass_mem_mb: 8000
+  call_lowpass_runtime: 480

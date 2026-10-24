@@ -1,0 +1,5 @@
+executor: local
+cores: 2
+software-deployment-method:
+- apptainer
+apptainer-args: --cleanenv
