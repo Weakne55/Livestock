@@ -1,0 +1,6 @@
+*.sh text eol=lf
+*.sbatch text eol=lf
+*.smk text eol=lf
+Snakefile text eol=lf
+*.tsv text eol=lf whitespace=-trailing-space
+*.yaml text eol=lf

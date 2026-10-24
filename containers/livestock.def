@@ -1,0 +1,43 @@
+Bootstrap: docker
+From: condaforge/miniforge3:25.3.1-0
+
+%labels
+    Author livestock-team
+    Pipeline livestock-WGS-lpWGS
+    PipelineVersion 0.3.0-rc1
+
+%post
+    set -eu
+    /opt/conda/bin/conda config --system --set channel_priority strict
+    /opt/conda/bin/conda create -y -n livestock \
+      --override-channels -c conda-forge -c bioconda \
+      python=3.11 \
+      bwa=0.7.18 \
+      bwa-mem2=2.3 \
+      samtools=1.24 \
+      bcftools=1.24 \
+      fastp=0.26.0 \
+      mosdepth=0.3.14 \
+      multiqc=1.33
+    /opt/conda/bin/conda clean --all --yes
+    /opt/conda/envs/livestock/bin/samtools --version | head -1
+    /opt/conda/envs/livestock/bin/bcftools --version | head -1
+    /opt/conda/envs/livestock/bin/fastp --version
+
+%environment
+    export PATH="/opt/conda/envs/livestock/bin:$PATH"
+    export LC_ALL=C.UTF-8
+    export LANG=C.UTF-8
+
+%runscript
+    exec "$@"
+
+%test
+    command -v bwa
+    command -v bwa-mem2
+    command -v samtools
+    command -v bcftools
+    command -v fastp
+    command -v mosdepth
+    command -v multiqc
+    command -v python

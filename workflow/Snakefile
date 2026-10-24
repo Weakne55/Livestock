@@ -1,0 +1,124 @@
+"""WGS/lpWGS FASTQ/BAM/CRAM -> preliminary VCF; no panel building or imputation.
+
+v0.3.0-rc1: modular Singularity/Slurm; persistent reference cache, optional BWA-MEM2, streaming markdup,
+      durable final VCF and QC, explicit Slurm resource limits.
+"""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(workflow.basedir) / 'lib'))
+from manifest import load_manifest, verify_references
+
+configfile: "config/config.yaml"
+REFERENCES = config['references']
+verify_references(REFERENCES, require_files=False)
+UNITS, SAMPLES, GROUPS = load_manifest(config['samples'], REFERENCES)
+WORK = str(Path(config['workdir']).expanduser().resolve())
+RESULTS = str(Path(config.get('results_dir', config['workdir'])).expanduser().resolve())
+CACHE = str(Path(config.get('reference_cache_dir', '~/livestock_references')).expanduser().resolve())
+CALL = config.get('variant_calling', {})
+LIMITS = config.get('resource_limits', {})
+
+
+def limit(name, default):
+    """Integer resource override from this run's YAML; never infer from an input file size."""
+    value = int(LIMITS.get(name, default))
+    if value <= 0:
+        raise ValueError(f'resource_limits.{name} must be positive')
+    return value
+
+KEEP_TRIMMED = bool(config.get('keep_trimmed_fastq', False))
+KEEP_LANES = bool(config.get('keep_lane_bam', False))
+ALIGNER = config.get('aligner', 'bwa')
+if ALIGNER not in ('bwa', 'bwa-mem2'):
+    raise ValueError('aligner must be bwa or bwa-mem2')
+SUFFIXES = ('.amb', '.ann', '.bwt', '.pac', '.sa') if ALIGNER == 'bwa' else (
+    '.0123', '.amb', '.ann', '.bwt.2bit.64', '.pac')
+CHROMS = {species: entry['contigs'] for species, entry in REFERENCES.items()}
+
+
+def cached_fasta(species):
+    return f"{CACHE}/{species}/{REFERENCES[species]['assembly']}/genome.fa"
+
+
+def idx_prefix(species):
+    return f"{CACHE}/{species}/{REFERENCES[species]['assembly']}/{ALIGNER}/genome"
+
+
+def index_files(species):
+    return [idx_prefix(species) + suffix for suffix in SUFFIXES]
+
+
+def unit(wc):
+    return UNITS[(wc.sample, wc.library, wc.lane)]
+
+
+def sample(wc):
+    return SAMPLES[wc.sample]
+
+
+def lanes(sample_id):
+    return [f"{WORK}/lanes/{u.sample}/{u.library}.{u.lane}.bam"
+            for u in UNITS.values() if u.sample == sample_id]
+
+
+def canonical_inputs(wc):
+    s = sample(wc)
+    return lanes(wc.sample) if s.input_type == 'fastq' else [s.source]
+
+
+def high_bam(wc):
+    s = sample(wc)
+    if s.species != wc.species or s.coverage_type != 'highcov':
+        raise ValueError(f'{wc.sample} is not highcov from {wc.species}')
+    return f"{WORK}/bam/{wc.sample}.bam"
+
+
+def high_raw(wc):
+    high_bam(wc)  # Verify that the sample belongs to this species/highcov branch.
+    return [f"{WORK}/raw_calls/{wc.species}/highcov/{wc.sample}/{c}.bcf"
+            for c in CHROMS[wc.species]]
+
+
+def low_raw(wc):
+    s = sample(wc)
+    if s.species != wc.species or s.coverage_type != 'lowpass':
+        raise ValueError(f'{wc.sample} is not lowpass from {wc.species}')
+    return [f"{WORK}/raw_calls/{wc.species}/lowpass/{wc.sample}/{c}.bcf"
+            for c in CHROMS[wc.species]]
+
+
+def ephemeral(path, preserve):
+    return path if preserve else temp(path)
+
+
+HIGH = [(sp, sid) for (sp, mode), ids in GROUPS.items() if mode == 'highcov' for sid in ids]
+LOW = [(sp, sid) for (sp, mode), ids in GROUPS.items() if mode == 'lowpass' for sid in ids]
+
+
+# All compute rules run inside one immutable SIF; Snakemake manager runs on host.
+IMAGE = str(Path(config.get('container_image', 'containers/livestock-0.3.sif')).expanduser().resolve())
+container: IMAGE
+
+rule all:
+    input:
+        [f"{WORK}/bam/{sid}.bam" for sid in SAMPLES],
+        [f"{WORK}/bam/{sid}.bam.bai" for sid in SAMPLES],
+        [f"{RESULTS}/vcf/{sp}/highcov/{sid}.vcf.gz" for sp, sid in HIGH],
+        [f"{RESULTS}/vcf/{sp}/highcov/{sid}.vcf.gz.tbi" for sp, sid in HIGH],
+        [f"{RESULTS}/vcf/{sp}/lowpass/{sid}.vcf.gz" for sp, sid in LOW],
+        [f"{RESULTS}/vcf/{sp}/lowpass/{sid}.vcf.gz.tbi" for sp, sid in LOW],
+        [f"{RESULTS}/qc/vcf/{sp}/highcov/{sid}.stats.txt" for sp, sid in HIGH],
+        [f"{RESULTS}/qc/vcf/{sp}/lowpass/{sid}.stats.txt" for sp, sid in LOW],
+        f"{RESULTS}/qc/multiqc/multiqc_report.html"
+
+
+include: "rules/reference.smk"
+include: "rules/preprocessing.smk"
+include: "rules/alignment.smk"
+include: "rules/bam_processing.smk"
+include: "rules/bam_qc.smk"
+include: "rules/calling_highcov.smk"
+include: "rules/calling_lowpass.smk"
+include: "rules/vcf_processing.smk"
+include: "rules/reporting.smk"

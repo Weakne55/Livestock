@@ -1,0 +1,4 @@
+sample	species	breed	population	country	sex	collection_year	source_accession	notes
+SHEEP001	Ovis_aries	Askanian	Askanian_meat_wool		F			Example only
+SHEEP002	Ovis_aries	Tsigai	Tsigai		F			Example only
+CATTLE001	Bos_taurus	Kalmyk	Kalmyk		M			Example only

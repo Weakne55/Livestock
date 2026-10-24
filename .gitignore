@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Snakemake and run state
+.snakemake/
+logs/
+*.log
+*.lock
+
+# Binary images and archive files
+containers/*.sif
+containers/*.sif.sha256
+*.zip
+*.tar.gz
+*.bak
+*.bak-*
+
+# Generated tests and results
+tests/data/
+tests/results/
+tests/positive_data/
+tests/positive_results/
+
+# User-specific run configurations and private metadata
+config/*.local.yaml
+config/*_run.yaml
+config/real_*.yaml
+config/real_*.tsv
+config/*_perf_*.yaml
+config/production*.yaml
+config/production*.tsv
+
+# Common result directories
+results/
+work/
+benchmarks/
+raw/
+references/
+*.bam
+*.bam.bai
+*.cram
+*.cram.crai
+*.bcf
+*.bcf.csi
+*.vcf.gz
+*.vcf.gz.tbi
+*.fastq.gz
+*.fq.gz
+config/demo.yaml
+config/demo_positive.yaml
+config/my_*.tsv
+config/*_private.tsv
+config/*.local.tsv
+
+# Private run manifests and outputs (review git ls-files too)
+config/*_samples.tsv
+config/*_metadata.tsv
+config/*_run_*.yaml
+config/*_samples*.tsv
+config/*_metadata*.tsv
+*.sbatch.out
+*.sbatch.err

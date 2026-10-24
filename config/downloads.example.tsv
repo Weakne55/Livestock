@@ -1,0 +1,9 @@
+accession	url	path	md5
+SRR2976536_1	https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR297/006/SRR2976536/SRR2976536_1.fastq.gz	/mnt/hot/${USER}/livestock_test_downloads/raw/SRR2976536_1.fastq.gz	af678d77f02747ee78cae0ca9f80db10
+SRR2976536_2	https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR297/006/SRR2976536/SRR2976536_2.fastq.gz	/mnt/hot/${USER}/livestock_test_downloads/raw/SRR2976536_2.fastq.gz	40b689ff49648678fa78deaf31d37616
+SRR10822538_1	https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR108/038/SRR10822538/SRR10822538_1.fastq.gz	/mnt/hot/${USER}/livestock_test_downloads/raw/SRR10822538_1.fastq.gz	84425fc6cab2f7ba35a6f8bc7a519c83
+SRR10822538_2	https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR108/038/SRR10822538/SRR10822538_2.fastq.gz	/mnt/hot/${USER}/livestock_test_downloads/raw/SRR10822538_2.fastq.gz	41a6311c1becf128ec1beb2345e0bf66
+SRR5507199_1	https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/009/SRR5507199/SRR5507199_1.fastq.gz	/mnt/hot/${USER}/livestock_test_downloads/raw/SRR5507199_1.fastq.gz	265079f57adc61be5ae285d32f5f2c0d
+SRR5507199_2	https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR550/009/SRR5507199/SRR5507199_2.fastq.gz	/mnt/hot/${USER}/livestock_test_downloads/raw/SRR5507199_2.fastq.gz	85f0f407037ac7e4e8e9a15fdac0ef5e
+OVIS_REF	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/016/772/045/GCF_016772045.1_ARS-UI_Ramb_v2.0/GCF_016772045.1_ARS-UI_Ramb_v2.0_genomic.fna.gz	/mnt/hot/${USER}/livestock_test_downloads/references/Ovis_aries/GCF_016772045.1_genomic.fna.gz	
+BOS_REF	https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/263/795/GCF_002263795.1_ARS-UCD1.2/GCF_002263795.1_ARS-UCD1.2_genomic.fna.gz	/mnt/hot/${USER}/livestock_test_downloads/references/Bos_taurus/GCF_002263795.1_genomic.fna.gz	

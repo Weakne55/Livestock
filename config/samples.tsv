@@ -1,0 +1,5 @@
+sample	species	breed	coverage_type	input_type	library	lane	r1	r2	bam	cram
+SHEEP001	Ovis_aries	Askanian	highcov	fastq	LIB001	L001	/absolute/path/to/raw/SHEEP001_L001_R1.fastq.gz	/absolute/path/to/raw/SHEEP001_L001_R2.fastq.gz		
+SHEEP001	Ovis_aries	Askanian	highcov	fastq	LIB001	L002	/absolute/path/to/raw/SHEEP001_L002_R1.fastq.gz	/absolute/path/to/raw/SHEEP001_L002_R2.fastq.gz		
+SHEEP002	Ovis_aries	Tsigai	lowpass	fastq	LIB002	L001	/absolute/path/to/raw/SHEEP002_R1.fastq.gz	/absolute/path/to/raw/SHEEP002_R2.fastq.gz		
+CATTLE001	Bos_taurus	Kalmyk	highcov	bam	LIB003	L001			/absolute/path/to/raw/CATTLE001.sorted.bam	
